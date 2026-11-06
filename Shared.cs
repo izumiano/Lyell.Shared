@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
+// ReSharper disable once CheckNamespace
 namespace Lyell.Shared;
 
 public enum GameState
