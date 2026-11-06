@@ -1,3 +1,5 @@
+// ReSharper disable once RedundantUsingDirective <required for dotnet8>
+
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -19,16 +21,6 @@ public record LoadingMod
 	public required string Name { get; set; }
 };
 
-public record ModLoadingState
-{
-	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-	public LoadingMod? Mod { get; set; }
-
-	public int CurrentCount { get; set; }
-	public int TotalCount { get; set; }
-	public bool Finalizing { get; set; }
-}
-
 public enum ModUpdateState
 {
 	Unset,
@@ -48,7 +40,7 @@ public record ModUpdate
 	public ModUpdateState UpdateState { get; set; } = ModUpdateState.Unset;
 }
 
-public record IncomingModLoadingState
+public record ModLoadingState
 {
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 	public LoadingMod? Mod { get; set; }
@@ -63,7 +55,7 @@ public record IncomingModLoadingState
 	public bool? Finalizing { get; set; }
 }
 
-public record IncomingModUpdates
+public record ModUpdates
 {
 	public bool Initial { get; set; } = false;
 	public required List<ModUpdate> Updates { get; set; }
@@ -76,17 +68,17 @@ public enum AcceptedAction
 	Restarting
 }
 
-public record IncomingCelesteState
+public record CelesteState
 {
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 	public GameState? GameState { get; set; }
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-	public IncomingModLoadingState? LoadingState { get; set; }
+	public ModLoadingState? LoadingState { get; set; }
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-	public IncomingModUpdates? ModUpdates { get; set; }
+	public ModUpdates? ModUpdates { get; set; }
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 	public bool? EverestUpdateAvailable { get; set; }
