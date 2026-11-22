@@ -1,6 +1,7 @@
 // ReSharper disable once RedundantUsingDirective <required for dotnet8>
 
 using System.Collections.Generic;
+using System;
 using System.Text.Json.Serialization;
 
 // ReSharper disable once CheckNamespace
@@ -20,6 +21,33 @@ public record LoadingMod
 {
 	public required string Name { get; set; }
 };
+
+public enum MissingDependencyReason
+{
+	Missing,
+	IncompatibleVersion
+}
+
+public record MissingDependency
+{
+	public required string Name { get; set; }
+	public required Version Version { get; set; }
+
+	[JsonConverter(typeof(JsonStringEnumConverter))]
+	public required MissingDependencyReason Reason { get; set; }
+}
+
+public record FailedLoadingMod
+{
+	public required string Name { get; set; }
+	public required Version Version { get; set; }
+
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+	public List<MissingDependency>? MissingDependencies { get; set; }
+
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public bool AssemblyLoadFailed { get; set; }
+}
 
 public enum ModUpdateState
 {
@@ -89,4 +117,7 @@ public record CelesteState
 
 	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 	public string? PlayedMap { get; set; }
+
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+	public List<FailedLoadingMod>? FailedLoadingMods { get; set; }
 }
